@@ -4,10 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="폼텍 3621 화일 인덱스 라벨을 브라우저에서 입력하고 미리보기한 뒤 인쇄합니다." />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'; upgrade-insecure-requests" />
     <title>폼텍 3621 라벨 인쇄</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -19,7 +17,7 @@
           </div>
           <div>
             <h1>폼텍 3621</h1>
-            <p>화일 인덱스 라벨 인쇄</p>
+            <p>비공식 호환 인쇄 도구 · 폼텍과 제휴·승인 관계 없음</p>
           </div>
         </div>
         <div class="top-actions">
@@ -167,6 +165,17 @@
           </div>
         </div>
 
+        <div class="privacy-card">
+          <label class="privacy-toggle" for="persistText">
+            <span>
+              <strong>입력 내용 자동 저장</strong>
+              <small>이 기기의 현재 브라우저에만 저장됩니다.</small>
+            </span>
+            <input id="persistText" type="checkbox" />
+          </label>
+          <p>공용 컴퓨터에서는 자동 저장을 끄거나 사용 후 왼쪽의 ‘모두 지우기’를 눌러 주세요. 입력 내용과 설치 글꼴 목록은 사이트 운영자에게 전송되지 않습니다.</p>
+        </div>
+
         <div class="setting-section-title">
           <h3>프린터 위치 보정</h3>
           <p>시험 인쇄 후 라벨 전체가 밀린 만큼 조절하세요.</p>
@@ -187,6 +196,8 @@
           <strong>A4 · 36칸 · 95 × 14mm</strong>
           <small>2열 × 18행 / 상단 22.5mm / 좌우 9mm</small>
         </div>
+
+        <p class="trademark-note">이 사이트는 폼텍 또는 코스틱폼텍과 제휴·승인 관계가 없는 비공식 호환 도구입니다. 제품명과 상표의 권리는 각 권리자에게 있습니다.</p>
 
         <div class="dialog-actions">
           <button class="button button-ghost" id="resetSettings" type="button">기본값 복원</button>

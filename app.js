@@ -10,6 +10,7 @@
       fontChoice: "auto",
       baseFontSize: 22,
       fontSizeCustomized: false,
+      persistText: true,
       numberingOrder: "row",
       leftPadding: 3,
       offsetX: 0,
@@ -44,6 +45,7 @@
     localFontOptions: document.querySelector("#localFontOptions"),
     numberingOrderInputs: [...document.querySelectorAll('input[name="numberingOrder"]')],
     baseFontSize: document.querySelector("#baseFontSize"),
+    persistText: document.querySelector("#persistText"),
     leftPadding: document.querySelector("#leftPadding"),
     offsetX: document.querySelector("#offsetX"),
     offsetY: document.querySelector("#offsetY"),
@@ -95,7 +97,18 @@
   }
 
   function saveState(showIndicator = true) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    const savedState = structuredClone(state);
+    if (!savedState.settings.persistText) savedState.text = "";
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedState));
+    } catch {
+      showToast("브라우저 저장 공간을 사용할 수 없어 자동 저장하지 못했습니다.");
+      return;
+    }
+    if (!state.settings.persistText) {
+      el.savedState.classList.remove("visible");
+      return;
+    }
     if (!showIndicator) return;
     clearTimeout(saveTimer);
     el.savedState.classList.add("visible");
@@ -184,7 +197,7 @@
       case "noto": return '"Noto Sans KR", "Malgun Gothic", sans-serif';
       default: return hyFontAvailable
         ? '"LocalHYGothic", "Noto Sans KR", "Malgun Gothic", sans-serif'
-        : '"Noto Sans KR", "Malgun Gothic", sans-serif';
+        : '"Malgun Gothic", "맑은 고딕", sans-serif';
     }
   }
 
@@ -431,6 +444,7 @@
     state.settings.fontChoice = nextFontChoice;
     state.settings.numberingOrder = selectedNumberingOrder();
     state.settings.baseFontSize = clampNumber(el.baseFontSize.value, 8, 40, 22);
+    state.settings.persistText = el.persistText.checked;
     state.settings.leftPadding = clampNumber(el.leftPadding.value, 0, 12, 3);
     state.settings.offsetX = clampNumber(el.offsetX.value, -10, 10, 0);
     state.settings.offsetY = clampNumber(el.offsetY.value, -10, 10, 0);
@@ -464,6 +478,7 @@
     el.fontChoice.value = state.settings.fontChoice;
     setNumberingOrderControl(state.settings.numberingOrder);
     el.baseFontSize.value = state.settings.baseFontSize;
+    el.persistText.checked = state.settings.persistText;
     el.leftPadding.value = state.settings.leftPadding;
     el.offsetX.value = state.settings.offsetX;
     el.offsetY.value = state.settings.offsetY;
@@ -699,6 +714,12 @@
     }));
     el.baseFontSize.addEventListener("input", () => syncSettings({ fontSizeChanged: true }));
     el.baseFontSize.addEventListener("change", () => syncSettings({ fontSizeChanged: true }));
+    el.persistText.addEventListener("change", () => {
+      syncSettings();
+      showToast(el.persistText.checked
+        ? "입력 내용을 이 브라우저에 자동 저장합니다."
+        : "입력 내용 자동 저장을 껐습니다. 저장되어 있던 입력 내용도 삭제했습니다.");
+    });
     [el.leftPadding, el.offsetX, el.offsetY].forEach((control) => {
       control.addEventListener("input", () => syncSettings());
       control.addEventListener("change", () => syncSettings());
@@ -711,6 +732,7 @@
       setNumberingOrderControl(state.settings.numberingOrder);
       renderStartPositionOptions();
       el.baseFontSize.value = state.settings.baseFontSize;
+      el.persistText.checked = state.settings.persistText;
       el.leftPadding.value = state.settings.leftPadding;
       el.offsetX.value = state.settings.offsetX;
       el.offsetY.value = state.settings.offsetY;

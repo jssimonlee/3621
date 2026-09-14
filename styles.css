@@ -294,6 +294,13 @@ textarea:focus { border-color: #7daf97; box-shadow: 0 0 0 4px rgba(23, 107, 75, 
 .order-option input:checked + span strong { color: white; background: var(--green); }
 .order-option input:focus-visible + span { outline: 3px solid rgba(23, 107, 75, 0.24); outline-offset: 2px; }
 .setting-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.privacy-card { margin: 2px 0 18px; padding: 13px 14px; border: 1px solid #dbe7e1; border-radius: 12px; background: #f6faf8; }
+.privacy-toggle { display: flex; align-items: center; justify-content: space-between; gap: 14px; cursor: pointer; }
+.privacy-toggle > span { display: flex; flex-direction: column; gap: 3px; }
+.privacy-toggle strong { color: #33463c; font-size: 12px; }
+.privacy-toggle small { color: #7a8981; font-size: 9.5px; }
+.privacy-toggle input { width: 36px; height: 20px; flex: none; accent-color: var(--green); }
+.privacy-card p { margin: 10px 0 0; padding-top: 9px; border-top: 1px solid #e1eae5; color: #718078; font-size: 9.5px; line-height: 1.55; }
 .setting-section-title { padding-top: 6px; margin: 2px 0 14px; border-top: 1px solid #edf0ee; }
 .setting-section-title h3 { margin: 16px 0 3px; font-size: 14px; }
 .setting-section-title p { margin: 0; color: var(--muted); font-size: 10px; }
@@ -301,6 +308,7 @@ textarea:focus { border-color: #7daf97; box-shadow: 0 0 0 4px rgba(23, 107, 75, 
 .spec-card span { font-size: 9px; font-weight: 800; letter-spacing: 0.1em; opacity: 0.7; }
 .spec-card strong { color: white; font-size: 14px; }
 .spec-card small { font-size: 10px; opacity: 0.72; }
+.trademark-note { margin: 10px 2px 0; color: #7b8781; font-size: 9px; line-height: 1.55; }
 .dialog-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; }
 
 .print-guide-dialog { width: min(460px, calc(100vw - 32px)); padding: 0; border: 0; border-radius: 22px; color: var(--ink); box-shadow: 0 30px 90px rgba(19, 35, 27, 0.3); }
