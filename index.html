@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="폼텍 3621 화일 인덱스 라벨을 브라우저에서 입력하고 미리보기한 뒤 인쇄합니다." />
+    <title>폼텍 3621 라벨 인쇄</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div>
+            <h1>폼텍 3621</h1>
+            <p>화일 인덱스 라벨 인쇄</p>
+          </div>
+        </div>
+        <div class="top-actions">
+          <button class="button button-secondary" id="settingsButton" type="button" aria-haspopup="dialog">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.55V21h-4v-.08A1.7 1.7 0 0 0 8.97 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15 1.7 1.7 0 0 0 3.08 14H3v-4h.08A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.88L4.2 7.06l2.83-2.83.06.06A1.7 1.7 0 0 0 8.97 4.6 1.7 1.7 0 0 0 10 3.08V3h4v.08A1.7 1.7 0 0 0 15.03 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9 1.7 1.7 0 0 0 20.92 10H21v4h-.08A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+            설정
+          </button>
+          <button class="button button-primary" id="printButton" type="button">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/><path d="M18 12h.01"/></svg>
+            인쇄
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="input-panel" aria-labelledby="inputTitle">
+          <div class="panel-heading">
+            <div>
+              <span class="eyebrow">LABEL LIST</span>
+              <h2 id="inputTitle">라벨 내용</h2>
+            </div>
+            <div class="panel-heading-actions">
+              <button class="suffix-button" id="appendSuffixButton" type="button" title="모든 라벨 끝에 ~ 붙이기">
+                <span aria-hidden="true">~</span> 라벨 끝에 붙이기
+              </button>
+              <span class="count-badge"><strong id="itemCount">0</strong>개</span>
+            </div>
+          </div>
+          <p class="helper-text">한 줄에 라벨 하나씩 입력하거나 목록을 붙여 넣으세요.</p>
+          <div class="textarea-wrap">
+            <textarea id="labelInput" spellcheck="false" placeholder="아 813.8 김298 ~&#10;유 911.3 박174 ~&#10;320.1 이327 ~" aria-label="라벨 내용 목록"></textarea>
+            <div class="saved-state" id="savedState" aria-live="polite">
+              <span class="saved-dot"></span> 자동 저장됨
+            </div>
+          </div>
+          <div class="input-footer">
+            <span>빈 줄은 제외됩니다.</span>
+            <button class="text-button" id="clearButton" type="button">모두 지우기</button>
+          </div>
+        </section>
+
+        <section class="preview-panel" aria-labelledby="previewTitle">
+          <div class="preview-toolbar">
+            <div class="preview-title-row">
+              <div>
+                <span class="eyebrow">PRINT PREVIEW</span>
+                <h2 id="previewTitle">인쇄 미리보기</h2>
+              </div>
+              <button class="duplicate-toggle" id="duplicateToggle" type="button" aria-pressed="false">
+                <span aria-hidden="true">×2</span> 2개씩
+              </button>
+            </div>
+            <div class="overflow-guide" id="overflowGuide" hidden aria-live="polite">
+              <span aria-hidden="true">!</span>
+              <div class="overflow-copy">
+                <strong>주황색 라벨은 글자가 셀을 벗어납니다.</strong>
+                <p>셀을 선택해서 수정<span id="multiSelectionHint"> · <kbd>Ctrl</kbd>+클릭 추가 선택 · <kbd>Shift</kbd>+클릭 범위 선택</span></p>
+              </div>
+              <button class="select-overflow-button" id="selectOverflowButton" type="button" hidden>주황색 모두 선택</button>
+            </div>
+          </div>
+
+          <div class="preview-layout">
+            <div class="preview-stage" id="previewStage" tabindex="0" aria-label="라벨 미리보기. 컨트롤 클릭으로 추가 선택, 시프트 클릭으로 범위 선택할 수 있습니다.">
+              <div class="preview-sheet-wrap" id="previewSheetWrap"></div>
+            </div>
+
+            <aside class="preview-side" aria-label="미리보기 도구">
+              <label class="start-position">
+                <span>첫 라벨 위치</span>
+                <select id="startPosition" aria-label="첫 라벨 위치"></select>
+              </label>
+
+              <div class="preview-footer">
+                <div class="page-status" aria-live="polite">
+                  <span>페이지</span>
+                  <div><strong id="currentPage">1</strong><span>/</span><span id="totalPages">1</span></div>
+                </div>
+                <button class="page-button" id="prevPage" type="button" disabled>
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
+                  이전
+                </button>
+                <button class="page-button" id="nextPage" type="button" disabled>
+                  다음
+                  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+
+            </aside>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <dialog class="settings-dialog" id="settingsDialog">
+      <form method="dialog" class="settings-card">
+        <div class="dialog-heading">
+          <div>
+            <span class="eyebrow">SETTINGS</span>
+            <h2>인쇄 설정</h2>
+          </div>
+          <button class="icon-button" value="close" aria-label="설정 닫기">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+
+        <div class="setting-group">
+          <label for="fontChoice">글꼴</label>
+          <select id="fontChoice">
+            <optgroup label="기본 글꼴">
+              <option value="auto">기본 — HY견고딕</option>
+              <option value="noto">노토 산스 한글 (Noto Sans KR)</option>
+              <option value="malgun">맑은 고딕</option>
+              <option value="hy">HY견고딕</option>
+            </optgroup>
+            <optgroup id="localFontOptions" label="이 컴퓨터의 설치 글꼴">
+              <option value="scan-fonts">이 컴퓨터 글꼴 불러오기…</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <span class="setting-label">라벨 채우는 순서</span>
+          <div class="order-options" role="radiogroup" aria-label="라벨 채우는 순서">
+            <label class="order-option">
+              <input type="radio" name="numberingOrder" value="row" />
+              <span><strong>가로 우선</strong><small>왼쪽 → 오른쪽 → 다음 행</small></span>
+            </label>
+            <label class="order-option">
+              <input type="radio" name="numberingOrder" value="column" />
+              <span><strong>세로 우선</strong><small>왼쪽 열 전체 → 오른쪽 열</small></span>
+            </label>
+          </div>
+          <p class="field-note">첫 라벨 위치의 번호와 실제 인쇄 순서에 함께 적용됩니다.</p>
+        </div>
+
+        <div class="setting-grid">
+          <div class="setting-group">
+            <label for="baseFontSize">기본 글자 크기</label>
+            <div class="number-input"><input id="baseFontSize" type="number" min="8" max="40" step="1" /><span>pt</span></div>
+          </div>
+          <div class="setting-group">
+            <label for="leftPadding">왼쪽 여백</label>
+            <div class="number-input"><input id="leftPadding" type="number" min="0" max="12" step="0.5" /><span>mm</span></div>
+          </div>
+        </div>
+
+        <div class="setting-section-title">
+          <h3>프린터 위치 보정</h3>
+          <p>시험 인쇄 후 라벨 전체가 밀린 만큼 조절하세요.</p>
+        </div>
+        <div class="setting-grid">
+          <div class="setting-group">
+            <label for="offsetX">좌우 보정</label>
+            <div class="number-input"><input id="offsetX" type="number" min="-10" max="10" step="0.5" /><span>mm</span></div>
+          </div>
+          <div class="setting-group">
+            <label for="offsetY">상하 보정</label>
+            <div class="number-input"><input id="offsetY" type="number" min="-10" max="10" step="0.5" /><span>mm</span></div>
+          </div>
+        </div>
+
+        <div class="spec-card">
+          <span>FORMTEC 3621</span>
+          <strong>A4 · 36칸 · 95 × 14mm</strong>
+          <small>2열 × 18행 / 상단 22.5mm / 좌우 9mm</small>
+        </div>
+
+        <div class="dialog-actions">
+          <button class="button button-ghost" id="resetSettings" type="button">기본값 복원</button>
+          <button class="button button-primary" value="close">완료</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="print-guide-dialog" id="printGuideDialog">
+      <div class="print-guide-card">
+        <div class="guide-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>
+        </div>
+        <span class="eyebrow">BEFORE PRINTING</span>
+        <h2>정확한 위치에 인쇄하려면</h2>
+        <p class="guide-intro">크롬·엣지 인쇄창의 <strong>설정 더보기</strong>에서 아래 두 항목을 확인해 주세요.</p>
+
+        <div class="guide-steps">
+          <div class="guide-step">
+            <span class="step-number">1</span>
+            <div><small>여백</small><strong>없음</strong></div>
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>
+          </div>
+          <div class="guide-step">
+            <span class="step-number">2</span>
+            <div><small>배율</small><strong>맞춤설정 100</strong></div>
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg>
+          </div>
+        </div>
+
+        <div class="guide-note">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          프린터나 브라우저가 바뀌면 다시 확인하세요.
+        </div>
+
+        <div class="guide-actions">
+          <button class="button button-ghost" id="cancelPrintGuide" type="button">취소</button>
+          <button class="button button-primary" id="openPrintDialog" type="button">
+            인쇄창 열기
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <div class="print-pages" id="printPages" aria-hidden="true"></div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
